@@ -79,4 +79,10 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
+  // Optimizations for production
+  corePlugins: {
+    // Disable unused features to reduce bundle size
+    preflight: true,
+    container: false, // We use custom container
+  },
 } 

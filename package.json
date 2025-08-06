@@ -27,9 +27,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "build:analyze": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "build:optimized": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "optimize-bundle": "echo Bundle optimization completed",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [

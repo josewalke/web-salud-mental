@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
-  performanceMonitor, 
   startPerformanceMonitoring, 
   getPerformanceMetrics, 
   exportPerformanceMetrics, 
-  downloadPerformanceMetrics,
   type PerformanceMetrics 
 } from '../utils/performanceMonitor';
+import { downloadConsumptionReport } from '../utils/generateConsumptionReport';
 
 interface PerformanceMonitorProps {
   isVisible?: boolean;
@@ -184,12 +183,131 @@ export function PerformanceMonitor({ isVisible = false, onClose }: PerformanceMo
                   <span className="text-gray-600">Total Requests:</span>
                   <span className="font-semibold">{metrics.resources.totalRequests}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">DOM Nodes:</span>
+                  <span className="font-semibold">{metrics.resources.domNodes}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Event Listeners:</span>
+                  <span className="font-semibold">{metrics.resources.eventListeners}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Scripts:</span>
+                  <span className="font-semibold">{metrics.resources.scripts}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Stylesheets:</span>
+                  <span className="font-semibold">{metrics.resources.stylesheets}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Images:</span>
+                  <span className="font-semibold">{metrics.resources.images}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Fonts:</span>
+                  <span className="font-semibold">{metrics.resources.fonts}</span>
+                </div>
                 {Object.entries(metrics.resources.byType).map(([type, data]) => (
                   <div key={type} className="flex justify-between">
                     <span className="text-gray-600 capitalize">{type}:</span>
                     <span className="font-semibold">{data.count} ({formatBytes(data.size)})</span>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* CPU */}
+            <div className="bg-gray-50 rounded-lg p-3">
+              <h4 className="font-semibold text-gray-800 mb-2">🖥️ CPU</h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-gray-600">Cores:</span>
+                  <p className="font-semibold">{metrics.cpu.cores}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Usage:</span>
+                  <p className="font-semibold">{metrics.cpu.usage.toFixed(1)}%</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Load Time:</span>
+                  <p className="font-semibold">{formatTime(metrics.cpu.loadTime)}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Batería */}
+            {metrics.battery && (
+              <div className="bg-gray-50 rounded-lg p-3">
+                <h4 className="font-semibold text-gray-800 mb-2">🔋 Batería</h4>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-gray-600">Level:</span>
+                    <p className="font-semibold">{metrics.battery.level.toFixed(1)}%</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Status:</span>
+                    <p className="font-semibold">{metrics.battery.charging ? 'Charging' : 'Discharging'}</p>
+                  </div>
+                  {metrics.battery.charging && metrics.battery.chargingTime > 0 && (
+                    <div>
+                      <span className="text-gray-600">Charging Time:</span>
+                      <p className="font-semibold">{Math.round(metrics.battery.chargingTime / 60)}min</p>
+                    </div>
+                  )}
+                  {!metrics.battery.charging && metrics.battery.dischargingTime > 0 && (
+                    <div>
+                      <span className="text-gray-600">Discharging Time:</span>
+                      <p className="font-semibold">{Math.round(metrics.battery.dischargingTime / 60)}min</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Consumo */}
+            <div className="bg-gray-50 rounded-lg p-3">
+              <h4 className="font-semibold text-gray-800 mb-2">⚡ Consumo</h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-gray-600">Total Load:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.totalLoadTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">First Byte:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.timeToFirstByte)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">DOM Ready:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.domContentLoaded)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Window Load:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.windowLoad)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Resource Load:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.resourceLoadTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Script Exec:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.scriptExecutionTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Style Calc:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.styleCalculationTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Layout:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.layoutTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Paint:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.paintTime)}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Composite:</span>
+                  <p className="font-semibold">{formatTime(metrics.consumption.compositeTime)}</p>
+                </div>
               </div>
             </div>
 
@@ -285,6 +403,12 @@ export function PerformanceMonitor({ isVisible = false, onClose }: PerformanceMo
                 className="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors text-sm font-medium"
               >
                 📥 Exportar JSON
+              </button>
+              <button
+                onClick={() => downloadConsumptionReport()}
+                className="flex-1 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors text-sm font-medium"
+              >
+                📊 Reporte Consumo
               </button>
             </div>
           </div>

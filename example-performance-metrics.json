@@ -42,12 +42,31 @@
         "count": 2,
         "size": 27299
       }
-    }
+    },
+    "domNodes": 1250,
+    "eventListeners": 45,
+    "scripts": 15,
+    "stylesheets": 6,
+    "images": 12,
+    "fonts": 3
   },
   "memory": {
     "usedJSHeapSize": 45678912,
     "totalJSHeapSize": 67890123,
-    "jsHeapSizeLimit": 2147483648
+    "jsHeapSizeLimit": 2147483648,
+    "memoryUsage": 2.13,
+    "availableMemory": 2101805125
+  },
+  "cpu": {
+    "cores": 8,
+    "usage": 15.5,
+    "loadTime": 1550
+  },
+  "battery": {
+    "level": 85,
+    "charging": false,
+    "chargingTime": 0,
+    "dischargingTime": 7200
   },
   "errors": [
     {
@@ -93,6 +112,20 @@
   "network": {
     "effectiveType": "4g",
     "downlink": 12.5,
-    "rtt": 45
+    "rtt": 45,
+    "connectionType": "wifi",
+    "saveData": false
+  },
+  "consumption": {
+    "totalLoadTime": 2850,
+    "timeToFirstByte": 450,
+    "domContentLoaded": 1950,
+    "windowLoad": 2850,
+    "resourceLoadTime": 1250,
+    "scriptExecutionTime": 750,
+    "styleCalculationTime": 180,
+    "layoutTime": 125,
+    "paintTime": 207.36,
+    "compositeTime": 25
   }
 } 
