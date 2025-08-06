@@ -1,24 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { SplineBackground } from './components/SplineBackground';
+import { Header } from './components/Header';
+import { HeroSection } from './components/HeroSection';
+import { ProblemSection } from './components/ProblemSection';
+import { ServicesSection } from './components/ServicesSection';
+import { Footer } from './components/Footer';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Spline 3D Background - Fixed position behind everything */}
+      <SplineBackground />
+
+      {/* Main content - Positioned above the background */}
+      <div className="relative z-20">
+        <Header />
+        <main>
+          <HeroSection />
+          <ProblemSection />
+          <ServicesSection />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }
